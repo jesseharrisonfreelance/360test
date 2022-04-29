@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>360&deg; Video</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="360&deg; Video - A-Frame">
+    <script src="aframe-master.js"></script>
+</head>
+
+<body>
+
+    <a-scene>
+        <a-assets>
+            <video id="videocontent" src="cavern.mp4" preload="auto" autoplay loop="true" crossOrigin="anonymous"></video>
+        </a-assets>
+
+        <!-- Using the asset management system. -->
+        <a-videosphere src="#videocontent"></a-videosphere>
+
+        <!-- Defining the URL inline. Not recommended but more comfortable for web developers. 
+        <a-videosphere src="degraves265.mp4"></a-videosphere>-->
+    </a-scene>
+
+    <script>
+        let timeout;
+        var videoElement = document.querySelector('#videocontent');
+
+        function myFunction() {
+
+        }
+
+        function PlayVideo() {
+            timeout = setTimeout(function() {
+                console.log("playing...");
+                videoElement.play();
+            }, 500);
+        }
+
+        PlayVideo();
+    </script>
+
+</body>
+
+</html>
