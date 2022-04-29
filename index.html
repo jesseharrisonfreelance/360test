@@ -3,17 +3,26 @@
 
 <head>
     <meta charset="utf-8">
-    <title>360&deg; Image</title>
-    <meta name="description" content="360&deg; Image - A-Frame">
+    <title>360&deg; Video</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="360&deg; Video - A-Frame">
     <script src="aframe-master.js"></script>
 </head>
 
 <body>
-    <a-scene>
-        <a-sky src="360.jpg" rotation="0 -130 0"></a-sky>
 
-        <a-text font="kelsonsans" value="Spatial Text, fixed rotation" width="3" position="-1.5 1 -1.5" rotation="0 80 0" text=""></a-text>
+    <a-scene>
+        <a-assets>
+            <video id="degraves" src="degraves265.mp4" preload="auto" autoplay loop="true" crossOrigin="anonymous"></video>
+        </a-assets>
+
+        <!-- Using the asset management system. -->
+        <a-videosphere src="#degraves"></a-videosphere>
+
+        <!-- Defining the URL inline. Not recommended but more comfortable for web developers. 
+        <a-videosphere src="degraves265.mp4"></a-videosphere>-->
     </a-scene>
+
 </body>
 
 </html>
