@@ -7,25 +7,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="360&deg; Video - A-Frame">
     <script src="aframe-master.js"></script>
-</head>
-
-<body>
-
-    <a-scene>
-        <a-assets>
-            <video id="videocontent" src="bridge.mp4" preload="auto" autoplay loop="true" crossOrigin="anonymous"></video>
-        </a-assets>
-
-        <!-- Using the asset management system. -->
-        <a-videosphere src="#videocontent"></a-videosphere>
-
-        <!-- Defining the URL inline. Not recommended but more comfortable for web developers. 
-        <a-videosphere src="degraves265.mp4"></a-videosphere>-->
-    </a-scene>
 
     <script>
         let timeout;
-        var videoElement = document.querySelector('#videocontent');
+        var videoElement, videoControls;
 
         function PlayVideo() {
             timeout = setTimeout(function() {
@@ -38,14 +23,46 @@
 
         function receiver(e) {
             //if (e.origin == 'http://example.com') {
-            if (e.data.startsWith('PlayVideo')) {
+            if (e.data.startsWith('Move(')) {
                 //e.source.postMessage('Hello', e.origin);
-                PlayVideo();
+                //PlayVideo();
+                console.log("Recieved Message MOVE: " + (e.data));
             } else {
                 //alert(e.data);
                 console.log("Recieved Message: " + (e.data));
             }
         }
+
+        AFRAME.registerComponent('play', {
+            init: function() {
+                videoElement = document.querySelector('#videocontent');
+                videoControls = document.querySelector('#playimage');
+                this.el.addEventListener('click', function() {
+
+                    if (videoElement.paused) PlayVideo();
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <a-scene>
+        <a-assets>
+            <img id="playimage" src="play.png">
+            <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous"></video>
+        </a-assets>
+
+        <!-- Using the asset management system. -->
+        <a-image id="videocontrols" src="#playimage" position="0 -3 0" scale="1 1 1"></a-image>
+        <a-videosphere src="#videocontent"></a-videosphere>
+
+        <!-- Defining the URL inline. Not recommended but more comfortable for web developers. 
+        <a-videosphere src="degraves265.mp4"></a-videosphere>-->
+    </a-scene>
+
+    <script>
     </script>
 
 </body>
