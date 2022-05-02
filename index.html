@@ -27,10 +27,6 @@
         let timeout;
         var videoElement = document.querySelector('#videocontent');
 
-        function myFunction() {
-
-        }
-
         function PlayVideo() {
             timeout = setTimeout(function() {
                 console.log("playing...");
@@ -38,7 +34,18 @@
             }, 500);
         }
 
-        PlayVideo();
+        window.addEventListener('message', receiver, false);
+
+        function receiver(e) {
+            //if (e.origin == 'http://example.com') {
+            if (e.data.startsWith('PlayVideo')) {
+                //e.source.postMessage('Hello', e.origin);
+                PlayVideo();
+            } else {
+                //alert(e.data);
+                console.log("Recieved Message: " + (e.data));
+            }
+        }
     </script>
 
 </body>
