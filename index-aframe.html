@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>360&deg; Video</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="360&deg; Video - A-Frame">
+    <script src="aframe-master.js"></script>
+
+    <script>
+        window.addEventListener('message', receiver, false);
+
+        function receiver(e) {
+            //if (e.origin == 'http://example.com') {
+            if (e.data.startsWith('Move(')) {
+                //e.source.postMessage('Hello', e.origin);
+                //PlayVideo();
+                console.log("Recieved Message MOVE: " + (e.data));
+            } else {
+                //alert(e.data);
+                console.log("Recieved Message: " + (e.data));
+            }
+        }
+
+        AFRAME.registerComponent('playThe360Video', {
+            init: function() {
+                let videoElement = document.querySelector('#videocontent');
+                let videoControls = document.querySelector('#playimage');
+                this.el.addEventListener('click', function() {
+                    console.log("playing...");
+                    videoElement.play();
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <a-scene>
+        <!-- Using the asset management system. -->
+        <a-assets>
+            <img id="playimage" src="play.png">
+            <video id="videocontent" src="bridge.mp4" autoplay muted preload="auto" loop="true" crossOrigin="anonymous" playinline webkit-playinline></video>
+        </a-assets>
+
+        <!-- videosphere projecting the 360 video -->
+        <a-videosphere src="#videocontent" rotation="0 2 0"></a-videosphere>
+
+        <!-- Video controls -->
+        <a-image id="videocontrols" src="#playimage" position="0 1 2" scale="-0.2 0.2 1" material="" geometry=""></a-image>
+
+        <!-- Camera rig -->
+        <a-camera id="camera">
+            <a-cursor></a-cursor>
+        </a-camera>
+        <a-scene stats></a-scene>
+    </a-scene>
+
+    <script>
+    </script>
+
+</body>
+
+</html>
