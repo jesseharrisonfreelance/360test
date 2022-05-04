@@ -13,25 +13,29 @@
 
 <body>
 
-    <div id="overlay-play" style="background: blue; z-index: 1; opacity: 0.1; position:absolute;top:0%;left:0%;width:100vw;height:100vh;">
+
+    <div id="overlay" style="display:block; z-index: 1; position:absolute;top:0;left:0;width:100vw;height:100vh; display: flex; justify-content: center; align-items: center;">
+        <div style="z-index: 2; position: absolute;top:0;left:0;width:100vw;height:100vh;opacity: 0.75;background: black; "></div>
+        <div style="font-size:30pt; z-index: 3;color:#FFF;">
+            <span id="overlay-play">CLICK ANYWHERE TO START</span>
+            <span id="overlay-load">LOADING VIDEO...</span>
+        </div>
     </div>
 
     <a-scene>
         <!-- Using the asset management system. -->
         <a-assets>
             <img id="playimage" src="play.png">
-            <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous" playinline webkit-playinline></video>
+            <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous" playinline webkit-playinline autoplay></video>
         </a-assets>
 
 
         <!-- videosphere projecting the 360 video -->
         <a-videosphere src="#videocontent" rotation="0 0 0"></a-videosphere>
 
-        <!-- Video controls -->
-        <a-image id="videocontrols" src="#playimage" position="0 1 2" scale="-0.2 0.2 1" material="" geometry=""></a-image>
-
+        <!-- A 3D thing for reference -->
         <a-cylinder position="-1 0.75 -23" rotation="-10 2 -43" radius="0.5" height="1.5" color="#FFC65D" animation="property: rotation; to: 0 360 0; loop: true; dur: 5000" event-set__enter="_event: mouseenter; _target: #cylinderText; visible: true" event-set__leave="_event: mouseleave; _target: #cylinderText; visible: false">
-            <a-text id="cylinderText" value="This is a cylinder" align="center" color="#FFF" visible="false" position="0 -0.55 0.55" geometry="primitive: plane; width: 1.75" material="color: #333"></a-text>
+            <a-text id="cylinderText" value="This is a cylinder" align="center" color="#FFF" visible="false" geometry="primitive: plane; width: 1.75" material="color: #333"></a-text>
         </a-cylinder>
 
         <!-- Camera rig -->
@@ -42,6 +46,35 @@
     </a-scene>
 
     <script>
+        const videoElement = document.querySelector('#videocontent');
+        const interactionOverlay = document.getElementById("overlay");
+        const interactionOverlayLoad = document.getElementById("overlay-load");
+        const interactionOverlayPlay = document.getElementById("overlay-play");
+        var isPlaying = IsVideoPlaying();
+        // Add event listener to table
+        interactionOverlayPlay.addEventListener("click", PlayVideo, false);
+        interactionOverlayPlay.addEventListener("mousemove", PlayVideo, false);
+        interactionOverlayPlay.addEventListener("touchstart", PlayVideo, false);
+        interactionOverlayLoad.style.display = "block";
+        interactionOverlayPlay.style.display = "none";
+
+        //give it a second and thensee if the video has auto started
+        setTimeout(() => {
+            EnableVideoUserInteractionOverlay();
+        }, 1000);
+
+        function EnableVideoUserInteractionOverlay() {
+            console.log("EnableVideoUserInteractionOverlay");
+            if (IsVideoPlaying()) {
+                console.log("is playing, hiding loader and interaction");
+                interactionOverlay.remove();
+            } else {
+                console.log("not playing, hiding loader and showing interaction");
+                interactionOverlayLoad.style.display = "none";
+                interactionOverlayPlay.style.display = "block";
+            }
+        }
+
         window.addEventListener('message', receiver, false);
 
         function receiver(e) {
@@ -53,19 +86,26 @@
             }
         }
 
-        var videoElement = document.querySelector('#videocontent');
-        var videoControls = document.querySelector('#playimage');
+        function IsVideoPlaying() {
+            console.log("is it playing? " + !videoElement.paused);
+            isPlaying = !videoElement.paused;
+            return !videoElement.paused;
+        }
 
         function PlayVideo() {
+            console.log("Trying to playing video");
+            IsVideoPlaying();
             window.parent.postMessage('StartTimeline', '*')
             interactionOverlay.remove();
             console.log("playing video in iframe...");
             videoElement.play();
+            IsVideoPlaying();
         }
 
-        // Add event listener to table
-        const interactionOverlay = document.getElementById("overlay-play");
-        interactionOverlay.addEventListener("click", PlayVideo, false);
+        function RotateVideo(yAxisRotation) {
+            console.log("rotating to: " + yAxisRotation);
+            videoElement.setAttribute("rotation", "0 " + yAxisRotation + " 0");
+        }
 
         window.addEventListener("load", function() {
             window.parent.postMessage('ResetTimeline', '*');
