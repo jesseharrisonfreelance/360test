@@ -7,14 +7,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="360&deg; Video - A-Frame">
     <script src="aframe-master.js"></script>
-    <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
+    <!--<script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>-->
 
 </head>
 
 <body>
 
-    <div id="overlay-play" style="background: blue; z-index: 1; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; opacity: 0.1;  display: flex;align-items: center; justify-content: center;">
-        <p>CLICK HERE</p>
+    <div id="overlay-play" style="background: blue; z-index: 1; opacity: 0.1; position:absolute;top:0%;left:0%;width:100vw;height:100vh;">
     </div>
 
     <a-scene>
@@ -24,14 +23,14 @@
             <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous" playinline webkit-playinline></video>
         </a-assets>
 
+
         <!-- videosphere projecting the 360 video -->
         <a-videosphere src="#videocontent" rotation="0 0 0"></a-videosphere>
 
         <!-- Video controls -->
         <a-image id="videocontrols" src="#playimage" position="0 1 2" scale="-0.2 0.2 1" material="" geometry=""></a-image>
 
-
-        <a-cylinder position="-1 0.75 -13" radius="0.5" height="1.5" color="#FFC65D" event-set__enter="_event: mouseenter; _target: #cylinderText; visible: true" event-set__leave="_event: mouseleave; _target: #cylinderText; visible: false">
+        <a-cylinder position="-1 0.75 -23" rotation="-10 2 -43" radius="0.5" height="1.5" color="#FFC65D" animation="property: rotation; to: 0 360 0; loop: true; dur: 5000" event-set__enter="_event: mouseenter; _target: #cylinderText; visible: true" event-set__leave="_event: mouseleave; _target: #cylinderText; visible: false">
             <a-text id="cylinderText" value="This is a cylinder" align="center" color="#FFF" visible="false" position="0 -0.55 0.55" geometry="primitive: plane; width: 1.75" material="color: #333"></a-text>
         </a-cylinder>
 
@@ -40,17 +39,13 @@
             <a-cursor></a-cursor>
         </a-camera>
 
-        <a-scene stats></a-scene>
     </a-scene>
 
     <script>
         window.addEventListener('message', receiver, false);
 
         function receiver(e) {
-            //if (e.origin == 'http://example.com') {
             if (e.data.startsWith('Move(')) {
-                //e.source.postMessage('Hello', e.origin);
-                //PlayVideo();
                 console.log("Recieved Message MOVE: " + (e.data));
             } else {
                 //alert(e.data);
@@ -72,7 +67,9 @@
         const interactionOverlay = document.getElementById("overlay-play");
         interactionOverlay.addEventListener("click", PlayVideo, false);
 
-        window.parent.postMessage('ResetTimeline', '*')
+        window.addEventListener("load", function() {
+            window.parent.postMessage('ResetTimeline', '*');
+        });
     </script>
 
 </body>
