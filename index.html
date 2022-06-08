@@ -89,8 +89,10 @@
                 console.log("Recieved Message MOVE: " + (messageStr));
                 rotationAmount = messageStr.replace(/(^.*\[|\].*$)/g, '')
                 RotateVideo(rotationAmount);
-            } else {
-                //alert(e.data);
+            } else if (messageStr.startsWith('Play')) {
+                console.log("Recieved Message PLAY: " + (messageStr));
+                PlayVideo();
+            } else { //alert(e.data);
                 console.log("Recieved Message: " + (e.data));
             }
         }
