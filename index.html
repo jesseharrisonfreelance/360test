@@ -3,16 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>360&deg; Video</title>
+    <title>360 Video</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="360&deg; Video - A-Frame">
     <script src="aframe-master.js"></script>
     <!--<script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>-->
-
 </head>
 
 <body>
-
 
     <div id="overlay" style="display:block; z-index: 1; position:absolute;top:0;left:0;width:100vw;height:100vh; display: flex; justify-content: center; align-items: center;">
         <div style="z-index: 2; position: absolute;top:0;left:0;width:100vw;height:100vh;opacity: 0.75;background: black; "></div>
@@ -31,7 +29,7 @@
 
 
         <!-- videosphere projecting the 360 video -->
-        <a-videosphere src="#videocontent" rotation="0 0 0"></a-videosphere>
+        <a-videosphere id="VideoSphere360" src="#videocontent"></a-videosphere>
 
         <!-- A 3D thing for reference -->
         <a-cylinder position="-1 0.75 -23" rotation="-10 2 -43" radius="0.5" height="1.5" color="#FFC65D" animation="property: rotation; to: 0 360 0; loop: true; dur: 5000" event-set__enter="_event: mouseenter; _target: #cylinderText; visible: true" event-set__leave="_event: mouseleave; _target: #cylinderText; visible: false">
@@ -39,9 +37,11 @@
         </a-cylinder>
 
         <!-- Camera rig -->
-        <a-camera>
-            <a-cursor></a-cursor>
-        </a-camera>
+        <a-entity id='cameraWrapper' A_VideoSphere360 rotation="0 0 0">
+            <a-camera>
+                <a-cursor></a-cursor>
+            </a-camera>
+        </a-entity>
 
     </a-scene>
 
@@ -50,7 +50,12 @@
         const interactionOverlay = document.getElementById("overlay");
         const interactionOverlayLoad = document.getElementById("overlay-load");
         const interactionOverlayPlay = document.getElementById("overlay-play");
+        const cameraRig = document.getElementById("cameraWrapper");
+
         var isPlaying = IsVideoPlaying();
+        var rotationAmount;
+        var messageStr;
+
         // Add event listener to table
         interactionOverlayPlay.addEventListener("click", PlayVideo, false);
         interactionOverlayPlay.addEventListener("mousemove", PlayVideo, false);
@@ -78,8 +83,12 @@
         window.addEventListener('message', receiver, false);
 
         function receiver(e) {
-            if (e.data.startsWith('Move(')) {
-                console.log("Recieved Message MOVE: " + (e.data));
+
+            messageStr = e.data.toString()
+            if (messageStr.startsWith('Move')) {
+                console.log("Recieved Message MOVE: " + (messageStr));
+                rotationAmount = messageStr.replace(/(^.*\[|\].*$)/g, '')
+                RotateVideo(rotationAmount);
             } else {
                 //alert(e.data);
                 console.log("Recieved Message: " + (e.data));
@@ -102,9 +111,10 @@
             IsVideoPlaying();
         }
 
-        function RotateVideo(yAxisRotation) {
-            console.log("rotating to: " + yAxisRotation);
-            videoElement.setAttribute("rotation", "0 " + yAxisRotation + " 0");
+
+        function RotateVideo(axisRotation) {
+            console.log("rotating to: " + axisRotation);
+            cameraRig.object3D.rotation.set(0, axisRotation, 0);
         }
 
         window.addEventListener("load", function() {
