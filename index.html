@@ -24,7 +24,7 @@
         <!-- Using the asset management system. -->
         <a-assets>
             <img id="playimage" src="play.png">
-            <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous" playinline webkit-playinline autoplay></video>
+            <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous" playinline webkit-playinline></video>
         </a-assets>
 
 
@@ -58,7 +58,7 @@
 
         // Add event listener to table
         interactionOverlayPlay.addEventListener("click", PlayVideo, false);
-        interactionOverlayPlay.addEventListener("mousemove", PlayVideo, false);
+        //interactionOverlayPlay.addEventListener("mousemove", PlayVideo, false);
         interactionOverlayPlay.addEventListener("touchstart", PlayVideo, false);
         interactionOverlayLoad.style.display = "block";
         interactionOverlayPlay.style.display = "none";
