@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>360 Video</title>
+    <title></title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="360&deg; Video - A-Frame">
     <script src="aframe-master.js"></script>
@@ -13,18 +13,18 @@
 <body>
 
     <div id="overlay" style="display:block; z-index: 1; position:absolute;top:0;left:0;width:100vw;height:100vh; display: flex; justify-content: center; align-items: center;">
-        <div style="z-index: 2; position: absolute;top:0;left:0;width:100vw;height:100vh;opacity: 0.75;background: black; "></div>
+        <div style="z-index: 2; position: absolute;top:0;left:0;width:100vw;height:100vh; background: rgba(0,0,0,0); "></div>
         <div style="font-size:30pt; z-index: 3;color:#FFF;">
             <span id="overlay-play">CLICK ANYWHERE TO START</span>
-            <span id="overlay-load">LOADING VIDEO...</span>
+            <span id="overlay-load">LOADING...</span>
         </div>
     </div>
 
-    <a-scene>
+    <a-scene loading-screen="dotsColor: white; backgroundColor: rgba(0,0,0,0)">
         <!-- Using the asset management system. -->
         <a-assets>
             <img id="playimage" src="play.png">
-            <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous" playinline webkit-playinline></video>
+            <video id="videocontent" src="bridge.mp4" preload="auto" loop="true" crossOrigin="anonymous" autoplay playinline webkit-playinline></video>
         </a-assets>
 
 
@@ -57,9 +57,9 @@
         var messageStr;
 
         // Add event listener to table
-        interactionOverlayPlay.addEventListener("click", PlayVideo, false);
-        //interactionOverlayPlay.addEventListener("mousemove", PlayVideo, false);
-        interactionOverlayPlay.addEventListener("touchstart", PlayVideo, false);
+        interactionOverlay.addEventListener("click", PlayVideo, false);
+        interactionOverlay.addEventListener("touchstart", PlayVideo, false);
+        //interactionOverlay.addEventListener("mousemove", PlayVideo, false);
         interactionOverlayLoad.style.display = "block";
         interactionOverlayPlay.style.display = "none";
 
